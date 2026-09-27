@@ -1,0 +1,55 @@
+# ==========================================
+# Gradle & Build Artifacts
+# ==========================================
+.gradle/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/sqldelight
+!**/src/commonMain/sqldelight
+
+# Directory-based project format (IntelliJ / Android Studio)
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Gradle local properties (contém caminhos locais do SDK/NDK)
+local.properties
+
+# ==========================================
+# Android & Kotlin Specifics
+# ==========================================
+*.ap_
+*.apk
+*.aab
+*.dex
+*.class
+captures/
+.externalNativeBuild
+.cxx/
+proguard/
+
+# ==========================================
+# Kotlin Multiplatform / Native Artifacts
+# ==========================================
+.kotlin/
+kotlin-js-store/
+*.klib
+
+# ==========================================
+# macOS System Files
+# ==========================================
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+
+# ==========================================
+# iOS / Xcode (se houver alvo iOS no projeto)
+# ==========================================
+**/iosApp/iosApp.xcodeproj/project.xcworkspace/
+**/iosApp/iosApp.xcodeproj/xcuserdata/
+**/iosApp/DerivedData/
+*.xcworkspace
+*.xcuserdata
+Pods/
