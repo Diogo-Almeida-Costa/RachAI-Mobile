@@ -8,17 +8,27 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.example.rachai.network.ApiResult
 import org.example.rachai.network.AuthApi
+import org.example.rachai.network.UserApi
+import org.example.rachai.network.UserProfile
 
 object SessionManager {
     var token: String? = null
+        private set
+
+    var currentUser: UserProfile? = null
         private set
 
     fun save(token: String) {
         this.token = token
     }
 
+    fun updateProfile(profile: UserProfile) {
+        this.currentUser = profile
+    }
+
     fun clear() {
         token = null
+        currentUser = null
     }
 
     val isLoggedIn: Boolean get() = token != null
@@ -33,7 +43,8 @@ sealed class AuthUiState {
 }
 
 class AuthViewModel(
-    private val authApi: AuthApi = AuthApi()
+    private val authApi: AuthApi = AuthApi(),
+    private val userApi: UserApi = UserApi()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<AuthUiState>(AuthUiState.Idle)
@@ -49,6 +60,11 @@ class AuthViewModel(
             when (val result = authApi.login(email.trim(), password)) {
                 is ApiResult.Success -> {
                     SessionManager.save(result.data.token)
+                    // Busca o perfil completo para alimentar avatar/saudação nas próximas telas.
+                    when (val profile = userApi.getMyProfile()) {
+                        is ApiResult.Success -> SessionManager.updateProfile(profile.data)
+                        is ApiResult.Error -> Unit // login já foi bem-sucedido; perfil pode ser buscado depois
+                    }
                     _uiState.value = AuthUiState.LoggedIn
                 }
                 is ApiResult.Error -> {
